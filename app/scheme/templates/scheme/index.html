@@ -1,0 +1,122 @@
+{% extends "layouts/base.html" %} 
+
+{% block title %} Schemes {% endblock title %}
+ 
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+<link href="/static/assets/css/bootstrap-grid.css" rel="stylesheet" />  
+<style>
+  #searchvalue{
+    width: 15em;
+  }
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col">
+    <div class="card">
+      <div class="card-header card-header-primary">
+        <h4 class="card-title">Schemes</h4>
+      </div>
+
+      <div class="card-body">
+              <form class="form-inline" action="{% url 'scheme-index' %}" method="GET">
+                <a href="{% url 'scheme-create' %}" class="btn btn-success mr-4">
+                  <span class="material-icons">add</span> New
+                </a>
+                
+                <div class="input-group mr-4"> 
+                  <select id="searchkey" name="searchkey" class="custom-select">
+                    <option value="" {% if not request.GET.searchkey %}selected{% endif %}>Search Options</option>
+                    {% for field in fields %}
+                      {% if field.name != 'id' %}
+                        {% if field.name != 'sale' %}
+                        <option value="{{ field.name }}" {% if request.GET.searchkey == field.name %}selected{% endif %}>{{ field.verbose_name | title }}</option>
+                        {% endif %} 
+                      {% endif %}
+                    {% endfor %}
+                  </select>
+                </div>
+
+                <div class="input-group">
+                  <input type="text" class="form-control"  name="searchvalue" id="searchvalue" placeholder="Search Keyword"/>
+                  <button type="submit" class="btn btn-facebook btn-round btn-just-icon">
+                    <span class="material-icons m-0">
+                      search
+                    </span>
+                  </button>
+                </div>
+              </form>
+        <div class="container pt-2 px-2">
+          <div class="row g-4 row-cols-1 row-cols-lg-2 row-cols-xl-3">
+            
+            {% for scheme in object_list %}
+            <div class="col">
+              <div>
+                <h4 class="font-weight-normal">
+                  {{ scheme.scheme_name }} 
+                </h4> 
+                <p class="mb-0">
+                  {% if scheme.description != None %} 
+                  {{ scheme.description }}
+                  {% else %}
+                  No descriptions.
+                  {% endif %}                
+                </p>
+                <a href="{% url 'scheme-detail' scheme.id %}" class="pl-0 nav-link text-info">See More</a>
+                <a href="{% url 'scheme-edit' scheme.id %}" class="btn btn-sm btn-warning p-2">
+                  <span class="material-icons text-white"> edit </span>
+                </a>
+                <a href="{% url 'scheme-delete' scheme.id %}" class="btn btn-sm btn-danger p-2">
+                  <span class="material-icons text-white"> delete </span>
+                </a>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      <div class="card-footer pagination">
+        <span class="step-links">
+          {% if page_obj.has_previous %}
+            <a class="btn btn-fab btn-fab-mini" href="?page=1">
+              <span class="material-icons">first_page</span></a>
+            <a class="btn btn-fab btn-fab-mini" href="?page={{ page_obj.previous_page_number }}">
+              <span class="material-icons">chevron_left</span>
+            </a>
+          {% endif %}
+  
+          <span class="mx-3">
+              Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+          </span>
+  
+          {% if page_obj.has_next %}
+              <a class="btn btn-fab btn-fab-mini" href="?page={{ page_obj.next_page_number }}">
+                <span class="material-icons">chevron_right</span>
+              </a>
+              <a class="btn btn-fab btn-fab-mini" href="?page={{ page_obj.paginator.num_pages }}">
+                <span class="material-icons">last_page</span>
+              </a>
+          {% endif %}
+      </span>
+      </div>
+    </div>
+  </div>
+</div>
+
+  {% endblock content %}
+
+  <!-- Specific Page JS goes HERE  -->
+  {% block javascripts %}
+
+  {% if messages %}
+      {% for message in messages %}
+        <script type="text/javascript">
+          showToast('{{ message }}', '{{ message.tags }}');
+        </script>
+      {% endfor %}
+  {% endif %}
+
+  {% endblock javascripts %}

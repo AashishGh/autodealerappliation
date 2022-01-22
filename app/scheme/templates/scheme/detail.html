@@ -1,0 +1,58 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Scheme Detail {% endblock title %}  
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+<link href="/static/assets/css/bootstrap-grid.css" rel="stylesheet" />
+<style>
+
+</style>
+
+{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-12 col-md-10 col-lg-8">
+    <div class="card">
+      <div class="card-header card-header-primary">
+        <h4 class="card-title">Scheme Detail</h4>
+      </div>
+      <div class="card-body">
+        <div class="row g-5 row-col-2 mb-2">
+          <div class="col"><b>Scheme Name:</b></div>
+          <div class="col">{{scheme.scheme_name}}</div>
+        </div>
+        <div class="row g-5 row-col-2">
+          <div class="col"><b>Description:</b></div>
+          <div class="col">{{scheme.description|default_if_none:"-"}}</div>
+        </div>
+       
+      </div>
+      <div class="card-footer">
+        <a href="{% url 'scheme-index' %}" class="btn btn-secondary">
+          <span class="mx-1">Back</span>
+        </a>
+        <a href="{% url 'scheme-edit' scheme.id %}" class="btn btn-warning">
+          Edit
+        </a>
+      </div>
+    </div>
+  </div>
+</div> 
+  
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+{% if messages %}
+{% for message in messages %}
+  <script type="text/javascript">
+    showToast('{{ message }}', '{{ message.tags }}');
+  </script>
+{% endfor %}
+{% endif %}
+{% endblock javascripts %}

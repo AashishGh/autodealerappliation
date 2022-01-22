@@ -1,0 +1,73 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Purchase Detail {% endblock title %}  
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+<link href="/static/assets/css/bootstrap-grid.css" rel="stylesheet" />
+<style>
+
+</style>
+
+{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-12 col-md-10 col-lg-8">
+    <div class="card">
+      <div class="card-header card-header-primary">
+        <h4 class="card-title">Purchase Detail</h4>
+      </div>
+      <div class="card-body">
+        <div class="row g-5 row-col-2 mb-1">
+          <div class="col"><b>Invoice Number:</b></div>
+          <div class="col">{{purchase.invoice_no}}</div>
+        </div>
+        <div class="row g-5 row-col-2 mb-1">
+          <div class="col"><b>Vehicle Chasis and Engine:</b></div>
+          <div class="col">{{purchase.vehicle_id}}</div>
+        </div>
+        <div class="row g-5 row-col-2 mb-1">
+          <div class="col"><b>Purchase Date:</b></div>
+          <div class="col"> {{purchase.purchase_date}}</div>
+        </div>
+        <div class="row g-5 row-col-2 mb-1">
+          <div class="col"><b>Price Incl. VAT:</b></div>
+          <div class="col">{{purchase.price}}</div>
+        </div>
+        <div class="row g-5 row-col-2 mb-1">
+          <div class="col"><b>Vendor:</b></div>
+          <div class="col">{{purchase.vendor_name}}</div>
+        </div>
+        <div class="row g-5 row-col-2 mb-1">
+          <div class="col"><b>Vendor Address:</b></div>
+          <div class="col">{{purchase.vendor_address}}</div>
+        </div>
+        
+      </div>
+      <div class="card-footer">
+        <a href="{% url 'purchase-index' %}" class="btn btn-secondary">
+          <span class="mx-1">Back</span>
+        </a>
+        <a href="{% url 'purchase-edit' purchase.id %}" class="btn btn-warning">
+          Edit
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+{% if messages %}
+{% for message in messages %}
+  <script type="text/javascript">
+    showToast('{{ message }}', '{{ message.tags }}');
+  </script>
+{% endfor %}
+{% endif %}
+{% endblock javascripts %}

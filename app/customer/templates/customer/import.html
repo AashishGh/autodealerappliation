@@ -1,0 +1,86 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Dashboard {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+<style>
+    .custom-file{
+        line-height: 1.5;
+        border: 1px solid #d2d2d2;
+        border-radius: 0.25rem;
+        -webkit-appearance: none;
+        appearance: none;
+      }
+      .custom-file:focus {
+        border-color: #9acffa;
+        outline: 0;
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.075), 0 0 5px rgba(154, 207, 250, 0.5); 
+      }
+      .custom-file:focus::-ms-value {
+        color: #495057;
+        background-color: rgba(0, 0, 0, 0); 
+      }
+      input[type="file"]::file-selector-button{
+        padding: .5rem;
+        line-height: 1.75;
+        border: none;
+      }
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-lg-10 col-md-12">
+            <div class="card">
+                <div class="card-header card-header-primary">
+                    <h4 class="card-title">Import Customer</h4> 
+                </div>
+                <div class="card-body">
+                    <form id="importform" class="" enctype="multipart/form-data" action="{% url 'customer-import' %}" method="POST">
+                        {% csrf_token %}
+                        <br>
+                        {% if form.non_field_errors %}
+                        <div class="invalid-feedback">
+                            {% for error in form.non_field_errors %}
+                                {{error|escape|linebreaksbr}}
+                             {% endfor %}
+                        </div>
+                        {% endif %}
+                        <div class="col-md-8 input-group mb-2" >
+                            <label for="{{ form.csvfile.id_for_label }}" class="w-100">Upload File</label>
+                            {{ form.csvfile }}
+                            {% if form.csvfile.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.csvfile.errors %}
+                                   {{error|escape}}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </form>
+                    <div class="card-footer">
+                        <button form="importform" class="btn btn-success" type="submit">Confirm</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+{% endblock content %}
+
+{% block javascripts %}
+
+{% if messages %}
+    {% for message in messages %}
+    <script type="text/javascript">
+      showToast("{{ message }}", "{{ message.tags }}");
+    </script>
+    {% endfor %}
+{% endif %}
+
+{% endblock javascripts %}
+
+</div>

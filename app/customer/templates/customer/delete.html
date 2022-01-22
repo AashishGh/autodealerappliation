@@ -1,0 +1,99 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Confirm Customer Delete {% endblock title %}  
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+<link href="/static/assets/css/bootstrap-grid.css" rel="stylesheet" />
+<style>
+
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-12 col-md-10 col-lg-8">
+    <div class="card">
+      <div class="card-header card-header-primary">
+        <h4 class="card-title">Delete Customer</h4>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col">
+            <h4><b>Are you sure to delete?</b></h4>
+          </div>
+        </div>
+        <div class="row g-5 row-col-2 mb-1">
+          <div class="col"><b>Citizenship No::</b></div>
+          <div class="col">{{customer.citizenship_no}}</div>
+        </div>
+        <div class="row g-5 row-col-2 mb-1">
+          <div class="col"><b>PAN No:</b></div>
+          <div class="col">{{customer.pan_no|default_if_none:"-"}}</div>
+        </div>
+        <div class="row g-5 row-col-2 mb-1">
+          <div class="col"><b>Customer Name::</b></div>
+          <div class="col"> {{customer.fullname}}</div>
+        </div>
+        <div class="row g-5 row-col-2 mb-1">
+          <div class="col"><b>Date of Birth:</b></div>
+          <div class="col">{{customer.dob}}</div>
+        </div>
+        <div class="row g-5 row-col-2 mb-1">
+          <div class="col"><b>Gender:</b></div>
+          <div class="col">{{customer.gender}}</div>
+        </div>
+        <div class="row g-5 row-col-2 mb-1">
+          <div class="col"><b>Email:</b></div>
+          <div class="col">{{customer.email}}</div>
+        </div>
+        <div class="row g-5 row-col-2 mb-1">
+          <div class="col"><b>Phone:</b></div>
+          <div class="col">{{customer.phone}}</div>
+        </div>
+        <div class="row g-5 row-col-2 mb-1">
+          <div class="col"><b>Occupation:</b></div>
+          <div class="col">{{customer.occupation}}</div>
+        </div>
+        <div class="row g-5 row-col-2 mb-1">
+          <div class="col"><b>City:</b></div>
+          <div class="col">{{customer.city}}</div>
+        </div>
+        <div class="row g-5 row-col-2 mb-1">
+          <div class="col"><b>District:</b></div>
+          <div class="col">{{customer.district}}</div>
+        </div>
+        <div class="row g-5 row-col-2 mb-1">
+          <div class="col"><b>State:</b></div>
+          <div class="col">{{customer.state}}</div>
+        </div>
+        <div class="row g-5 row-col-2 mb-1">
+          <div class="col"><b>Country:</b></div>
+          <div class="col">{{customer.country}}</div>
+        </div>
+        <div class="row g-5 row-col-2 mb-1">
+          <div class="col"><b>Address:</b></div>
+          <div class="col">{{customer.address}}</div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <a href="{% url 'customer-index' %}" class="btn btn-secondary">
+          <span class="mx-1">Cancel</span>
+        </a>
+        <form class="d-none" id="customerdeleteform" action="{% url 'customer-delete' customer.id %}" method="POST">
+          {% csrf_token %}
+        </form>
+        <button form="customerdeleteform" class="btn btn-danger">
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+{% endblock javascripts %}

@@ -1,0 +1,80 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Vehicle Detail {% endblock title %}  
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+<link href="/static/assets/css/bootstrap-grid.css" rel="stylesheet" />
+<style>
+
+</style>
+
+{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-12 col-md-10 col-lg-8">
+    <div class="card">
+      <div class="card-header card-header-primary">
+        <h4 class="card-title">Vehicle Detail</h4>
+      </div>
+      <div class="card-body">
+        <div class="row g-5 row-col-2 mb-1">
+          <div class="col"><b>Vehicle Model:</b></div>
+          <div class="col">{{vehicle.vehicle_model}}</div>
+        </div>
+        <div class="row g-5 row-col-2 mb-1">
+          <div class="col"><b>Color:</b></div>
+          <div class="col">{{vehicle.color|default_if_none:"-"}}</div>
+        </div>
+        <div class="row g-5 row-col-2 mb-1">
+          <div class="col"><b>Chasis Number:</b></div>
+          <div class="col"> {{vehicle.chasis_no}}</div>
+        </div>
+        <div class="row g-5 row-col-2 mb-1">
+          <div class="col"><b>Engine Number:</b></div>
+          <div class="col">{{vehicle.engine_no|default_if_none:"-"}}</div>
+        </div>
+        <div class="row g-5 row-col-2 mb-1">
+          <div class="col"><b>Registration Number:</b></div>
+          <div class="col">{{vehicle.reg_no}}</div>
+        </div>
+        <div class="row g-5 row-col-2 mb-1">
+          <div class="col"><b>MFD Year:</b></div>
+          <div class="col">{{vehicle.mfd_year}}</div>
+        </div>
+        <div class="row g-5 row-col-2 mb-1">
+          <div class="col"><b>Key Number:</b></div>
+          <div class="col">{{vehicle.key_no}}</div>
+        </div>
+        <div class="row g-5 row-col-2 mb-1">
+          <div class="col"><b>Battery Number:</b></div>
+          <div class="col">{{vehicle.battery_no}}</div>
+        </div>  
+      </div>
+      <div class="card-footer">
+        <a href="{% url 'vehicle-index' %}" class="btn btn-secondary">
+          <span class="mx-1">Back</span>
+        </a>
+        <a href="{% url 'vehicle-edit' vehicle.id %}" class="btn btn-warning">
+          Edit
+        </a>
+      </div>
+    </div>
+  </div>
+  
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+{% if messages %}
+{% for message in messages %}
+  <script type="text/javascript">
+    showToast('{{ message }}', '{{ message.tags }}');
+  </script>
+{% endfor %}
+{% endif %}
+{% endblock javascripts %}

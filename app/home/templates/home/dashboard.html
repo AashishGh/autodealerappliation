@@ -1,0 +1,164 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Dashboard {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+<style>
+  .card-stats{
+    min-height: 9.2em;
+  }
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+    <div class="row">
+      <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
+        <div class="card card-stats">
+          <div class="card-header card-header-warning card-header-icon">
+            <div class="card-icon">
+              <i class="material-icons">moped</i>
+            </div>
+            <p class="card-category">Vehicle</p>
+            <h3 class="card-title">{{ vehicle_count }}
+            </h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
+        <div class="card card-stats">
+          <div class="card-header card-header-success card-header-icon">
+            <div class="card-icon">
+              <i class="material-icons">account_balance</i>
+            </div>
+            <p class="card-category">Revenue</p>
+            <h3 class="card-title">{{ revenue  }}</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
+        <div class="card card-stats">
+          <div class="card-header card-header-danger card-header-icon">
+            <div class="card-icon">
+              <i class="material-icons">receipt_long</i>
+            </div>
+            <p class="card-category">Total Sales</p>
+            <h3 class="card-title">{{ sale_count }}</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
+        <div class="card card-stats">
+          <div class="card-header card-header-info card-header-icon">
+            <div class="card-icon">
+              <i class="material-icons">portrait</i>
+            </div>
+            <p class="card-category">Customers</p>
+            <h3 class="card-title">{{ customer_count }}</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card card-chart">
+          <div class="card-header card-header-success">
+            <div class="ct-chart" id="dailySalesChart"></div>
+          </div>
+          <div class="card-body">
+            <h4 class="card-title">Monthly Sales</h4>
+            <p class="card-category">
+              <span class="text-success"><i class="fa fa-long-arrow-up"></i> 55% </span> increase in today sales.</p>
+          </div>
+          <div class="card-footer">
+            <div class="stats">
+              <i class="material-icons">access_time</i> updated 4 minutes ago
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card card-chart">
+          <div class="card-header card-header-warning">
+            <div class="ct-chart" id="websiteViewsChart"></div>
+          </div>
+          <div class="card-body">
+            <h4 class="card-title">Sales Per Scheme </h4>
+            <p class="card-category"><span class="text-primary">100</span> sale in Dashain Tihar Scheme</p>
+          </div>
+          <div class="card-footer">
+            <div class="stats">
+              <i class="material-icons">update</i> Updated Yesterday
+            </div>
+          </div>
+        </div>
+      </div>
+      {% comment %} <div class="col-md-4">
+        <div class="card card-chart">
+          <div class="card-header card-header-danger">
+            <div class="ct-chart" id="completedTasksChart"></div>
+          </div>
+          <div class="card-body">
+            <h4 class="card-title">Daily Revenue</h4>
+            <p class="card-category">This month revenue: <span class="text-success">Rs 974649</span></p>
+          </div>
+          <div class="card-footer">
+            <div class="stats">
+              <i class="material-icons">access_time</i> Updated 1 hours ago
+            </div>
+          </div>
+        </div>
+      </div> {% endcomment %}
+    </div>
+    <div class="row">
+      <div class="col-lg-6 col-md-12">
+        <div class="card">
+          <div class="card-header card-header-primary">
+            <h4 class="card-title">Customers</h4>
+            
+          </div>
+          <div class="card-body table-responsive">
+            <table class="table table-hover">
+              <thead class="text-warning">
+                <th>#</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>City</th>
+              </thead>
+              <tbody>
+                {% for customer in customers %}
+                <tr>
+                  <td> {{ customer.id }} </td>
+                  <td> {{ customer.firstname }} {% if customer.middlename != "None" %} {{customer.middlename}} {% endif %} {{ customer.surname }} </td>
+                  <td> {{ customer.email }} </td>
+                  <td> {{ customer.phone }} </td>
+                  <td> {{ customer.city }} </td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="5">
+                    No customers created yet!
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+{% endblock content %}
+
+{% block javascripts %}
+
+  <script>
+    $(document).ready(function() {
+      // Javascript method's body can be found in assets/js/demos.js
+      md.initDashboardPageCharts();
+
+    });
+  </script>
+
+{% endblock javascripts %}
