@@ -44,8 +44,8 @@ class CustomerListView(ListView):
         searchvalue = self.request.GET.get("searchvalue", None)
         if searchkey != None:
             return get_filtered_queryset(searchkey, searchvalue)
-        
-        return Customer.objects.all()
+        else:
+            return Customer.objects.all()
 
 
 @method_decorator(login_required, name="dispatch")
