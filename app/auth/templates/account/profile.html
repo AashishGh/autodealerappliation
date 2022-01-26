@@ -1,0 +1,58 @@
+{% extends "layouts/base.html" %} 
+
+{% block title %} Login {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %} 
+
+{% block content %}
+<div class="row">
+    <div class="col-12 col-md-10 col-lg-8">
+      <div class="card">
+        <div class="card-header card-header-primary">
+          <h4 class="card-title">Profile</h4>
+        </div>
+        <div class="card-body">
+          <div class="row g-5 row-col-2 mb-1">
+            <div class="col"><b>First Name:</b></div>
+            <div class="col">{{user.first_name|title}}</div>
+          </div>
+          <div class="row g-5 row-col-2 mb-1">
+            <div class="col"><b>Last Name:</b></div>
+            <div class="col"> {{user.last_name|title}}</div>
+          </div>
+          <div class="row g-5 row-col-2 mb-1">
+            <div class="col"><b>Username:</b></div>
+            <div class="col">{{user.username}}</div>
+          </div>
+          <div class="row g-5 row-col-2 mb-1">
+            <div class="col"><b>Email:</b></div>
+            <div class="col">{{user.email}}</div>
+          </div>
+          <div class="row g-5 row-col-2 mb-1">
+            <div class="col"><b>Active:</b></div>
+            <div class="col">{% if user.is_active %} Yes {% else %} No {% endif %}</div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <a href="{% url 'edit-profile' user.id %}" class="btn btn-warning">
+            Edit
+          </a> 
+        </div>
+      </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+{% if messages %}
+{% for message in messages %}
+  <script type="text/javascript">
+    showToast('{{ message }}', '{{ message.tags }}');
+  </script>
+{% endfor %}
+{% endif %}
+
+{% endblock javascripts %}

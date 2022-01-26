@@ -1,12 +1,21 @@
-from re import template
-from django.urls import reverse
 from django.conf import settings
-from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
+from django.urls.base import reverse, reverse_lazy
 from django.views.generic import FormView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.views.generic import DetailView
+from django.views.generic.edit import UpdateView
+from django.contrib.auth.models import User
+from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib.auth.views import (
+    PasswordResetView,
+    PasswordResetDoneView,
+    PasswordResetConfirmView,
+    PasswordResetCompleteView,
+)
 
-from .forms import LoginForm, SignUpForm
+from .forms import LoginForm, SignUpForm, CustomPasswordResetForm, CustomSetPasswordForm, UserEditForm
 
 
 class LoginFormView(FormView):
@@ -60,28 +69,71 @@ class SignUpFormView(FormView):
             return self.form_invalid(form)
 
 
-def register_user(request):
-    msg = None
-    success = False
+@method_decorator(login_required, name="dispatch")
+class UserProfileView(DetailView):
+    model = User
+    template_name = "account/profile.html"
+    pk_url_kwarg = "id"
+    
 
-    if request.method == "POST":
-        form = SignUpForm(request.POST)
-        if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get("username")
-            raw_password = form.cleaned_data.get("password1")
-            user = authenticate(username=username, password=raw_password)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["segment"] = "Profile"
+        return context
 
-            msg = 'User created - please <a href="/login">login</a>.'
-            success = True
 
-            # return redirect("/login/")
+@method_decorator(login_required, name="dispatch")
+class UserProfileEditView(SuccessMessageMixin, UpdateView):
+    model = User
+    form_class = UserEditForm
+    template_name = "account/edit_profile.html"
+    pk_url_kwarg = "id"
+    success_message = "User successfully updated"
 
-        else:
-            msg = "Form is not valid"
-    else:
-        form = SignUpForm()
+    def get_success_url(self):
+        return reverse("profile", args=self.kwargs.get("id"))
 
-    return render(
-        request, "account/register.html", {"form": form, "msg": msg, "success": success}
-    )
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["segment"] = "Profile"
+        context["child_segment"] = "Edit"
+        return context
+
+
+
+
+class AccountPasswordResetView(PasswordResetView):
+    template_name = "account/password_reset_form.html"
+    form_class = CustomPasswordResetForm
+    success_url = reverse_lazy("password_reset_done")
+    from_mail = settings.EMAIL_HOST_USER
+
+
+class AccountPasswordResetDoneView(PasswordResetDoneView):
+    template_name = "account/password_reset_done.html"
+
+
+class AccountPasswordResetConfirmView(PasswordResetConfirmView):
+    template_name = "account/password_reset_confirm.html"
+    form_class = CustomSetPasswordForm
+    success_url = reverse_lazy("password_reset_complete")
+
+
+class AccountPasswordResetCompleteView(PasswordResetCompleteView):
+    template_name = "account/password_reset_complete.html"
+
+
+# class AccountPasswordChangeView(PasswordChangeView):
+#     template_name = "/account/password_reset_confirm.html"
+
+
+# class AccountPasswordChangeDoneView(PasswordChangeDoneView):
+#     template_name = "/account/password_reset_confirm.html"
+
+
+# class VerifyTokenView(TemplateView):
+#     template_name = "account/token.html"
+
+
+# class VerificationEmailView(TemplateView):
+#     template_name = "account/verify_email.html"

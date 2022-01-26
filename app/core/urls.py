@@ -25,7 +25,7 @@ handler400 = "home.views.error_400"
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("home.urls")),
-    path("", include("auth.urls")),
+    path("accounts/", include("auth.urls")),
     path("customers/", include("customer.urls")),
     path("purchases/", include("purchase.urls")),
     path("sales/", include("sale.urls")),
