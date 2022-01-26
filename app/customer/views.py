@@ -24,7 +24,7 @@ def get_filtered_queryset(searchkey, searchvalue):
         "state": Customer.objects.filter(state__contains=searchvalue),
         "country": Customer.objects.filter(country__contains=searchvalue),
         "state": Customer.objects.filter(state__contains=searchvalue),
-    }.get(searchkey)
+    }.get(searchkey, Customer.objects.all())
 
 
 @method_decorator(login_required, name="dispatch")

@@ -10,6 +10,19 @@ from .models import Vehicle
 from .forms import VehicleForm, VehicleImportForm
 
 
+def get_filtered_queryset(searchkey, searchvalue):
+    return {
+        "vehicle_model": Vehicle.objects.filter(vehicle_model__contains=searchvalue),
+        "color": Vehicle.objects.filter(color__contains=searchvalue),
+        "chasis_no": Vehicle.objects.filter(chasis_no__contains=searchvalue),
+        "engine_no": Vehicle.objects.filter(engine_no__contains=searchvalue),
+        "reg_no": Vehicle.objects.filter(reg_no__contains=searchvalue),
+        "key_no": Vehicle.objects.filter(key_no__contains=searchvalue),
+        "battery_no": Vehicle.objects.filter(battery_no__contains=searchvalue),
+        "mfd_year": Vehicle.objects.filter(mfd_year__contains=searchvalue),
+    }.get(searchkey, Vehicle.objects.all())
+
+
 @method_decorator(login_required, name="dispatch")
 class VehicleListView(ListView):
     model = Vehicle
@@ -22,7 +35,15 @@ class VehicleListView(ListView):
         context["fields"] = Vehicle._meta.get_fields()
         return context
 
+    def get_queryset(self):
+        searchkey = self.request.GET.get("searchkey", None)
+        searchvalue = self.request.GET.get("searchvalue", None)
+        if searchkey != None:
+            return get_filtered_queryset(searchkey, searchvalue)
+        else:
+            return Vehicle.objects.all()
 
+        
 @method_decorator(login_required, name="dispatch")
 class VehicleDetailView(DetailView):
     model = Vehicle

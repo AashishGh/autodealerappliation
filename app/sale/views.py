@@ -15,6 +15,21 @@ from .models import Sale
 from .forms import SaleForm, SaleImportForm
 
 
+def get_filtered_queryset(searchkey, searchvalue):
+    return {
+        "invoice_no": Sale.objects.filter(invoice_no__contains=searchvalue),
+        "challan_no": Sale.objects.filter(challan_no__contains=searchvalue),
+        "vehicle": Sale.objects.filter(vehicle__contains=searchvalue),
+        "customer": Sale.objects.filter(customer__contains=searchvalue),
+        "sale_date": Sale.objects.filter(sale_date__contains=searchvalue),
+        "amount": Sale.objects.filter(amount__contains=searchvalue),
+        "discount": Sale.objects.filter(discount__contains=searchvalue),
+        "payment_mode": Sale.objects.filter(payment_mode__contains=searchvalue),
+        "scheme": Sale.objects.filter(scheme__contains=searchvalue),
+        "finance_amount": Sale.objects.filter(finance_amount__contains=searchvalue),
+        "exchange_amount": Sale.objects.filter(exchange_amount__contains=searchvalue),
+    }.get(searchkey, Sale.objects.all())
+
 @method_decorator(login_required, name="dispatch")
 class SaleListView(ListView):
     model = Sale
@@ -26,6 +41,14 @@ class SaleListView(ListView):
         context["segment"] = "sale"
         context["fields"] = Sale._meta.get_fields(include_parents=False)
         return context
+    
+    def get_queryset(self):
+        searchkey = self.request.GET.get("searchkey", None)
+        searchvalue = self.request.GET.get("searchvalue", None)
+        if searchkey != None:
+            return get_filtered_queryset(searchkey, searchvalue)
+        else:
+            return Customer.objects.all()
 
 
 @method_decorator(login_required, name="dispatch")

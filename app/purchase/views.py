@@ -11,6 +11,16 @@ from .models import Purchase
 from .forms import PurchaseForm, PurchaseImportForm
 
 
+def get_filtered_queryset(searchkey, searchvalue):
+    return {
+        "invoice_no": Purchase.objects.filter(invoice_no__contains=searchvalue),
+        "vehicle": Purchase.objects.filter(vehicle__contains=searchvalue),
+        "purchase_date": Purchase.objects.filter(purchase_date__contains=searchvalue),
+        "price": Purchase.objects.filter(price__contains=searchvalue),
+        "vendor_name": Purchase.objects.filter(vendor_name__contains=searchvalue),
+        "vendor_address": Purchase.objects.filter(vendor_address__contains=searchvalue),
+    }.get(searchkey, Purchase.objects.all())
+
 @method_decorator(login_required, name="dispatch")
 class PurchaseListView(ListView):
     model = Purchase
@@ -22,6 +32,14 @@ class PurchaseListView(ListView):
         context["segment"] = "purchase"
         context["fields"] = Purchase._meta.get_fields(include_parents=False)
         return context
+
+    def get_queryset(self):
+        searchkey = self.request.GET.get("searchkey", None)
+        searchvalue = self.request.GET.get("searchvalue", None)
+        if searchkey != None:
+            return get_filtered_queryset(searchkey, searchvalue)
+        else:
+            return Purchase.objects.all()
 
 
 @method_decorator(login_required, name="dispatch")

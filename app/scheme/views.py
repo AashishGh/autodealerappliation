@@ -9,6 +9,12 @@ from .models import Scheme
 from .forms import SchemeForm, SchemeImportForm
 
 
+def get_filtered_queryset(searchkey, searchvalue):
+    return {
+        "scheme_name": Scheme.objects.filter(scheme_name__contains=searchvalue),
+        "description": Scheme.objects.filter(description=searchvalue),
+    }.get(searchkey, Scheme.objects.all())
+
 @method_decorator(login_required, name="dispatch")
 class SchemeListView(ListView):
     model = Scheme
@@ -21,6 +27,13 @@ class SchemeListView(ListView):
         context["fields"] = Scheme._meta.get_fields()
         return context
 
+    def get_queryset(self):
+        searchkey = self.request.GET.get("searchkey", None)
+        searchvalue = self.request.GET.get("searchvalue", None)
+        if searchkey != None:
+            return get_filtered_queryset(searchkey, searchvalue)
+        else:
+            return Scheme.objects.all()
 
 @method_decorator(login_required, name="dispatch")
 class SchemeDetailView(DetailView):
